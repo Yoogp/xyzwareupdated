@@ -1,8 +1,14 @@
 local Players = game:GetService("Players")
 local MarketplaceService = game:GetService("MarketplaceService")
-
--- Constants
 local CORRECT_KEY = "5ffZBf6mmLcTxP0ZLi38FAmUV4KpxKGb"
+local SUPPORTED_GAME_ID = 6447798030
+
+-- Function to check if the player is in the supported game
+local function checkGame()
+    if game.PlaceId ~= SUPPORTED_GAME_ID then
+        Players.LocalPlayer:Kick("Game Not supported.")
+    end
+end
 
 -- Function to create the initial GUI
 local function createInitialGUI()
@@ -12,8 +18,8 @@ local function createInitialGUI()
     screenGui.Parent = player:WaitForChild("PlayerGui")
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0.5, 0, 0.3, 0)
-    frame.Position = UDim2.new(0.25, 0, 0.35, 0)
+    frame.Size = UDim2.new(0.5, 0, 0.4, 0)
+    frame.Position = UDim2.new(0.25, 0, 0.3, 0)
     frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
     frame.Parent = screenGui
 
@@ -27,9 +33,21 @@ local function createInitialGUI()
     titleLabel.TextSize = 32
     titleLabel.Parent = frame
 
+    local keyNoteLabel = Instance.new("TextLabel")
+    keyNoteLabel.Size = UDim2.new(1, 0, 0.2, 0)
+    keyNoteLabel.Position = UDim2.new(0, 0, 0.25, 0)
+    keyNoteLabel.BackgroundTransparency = 1
+    keyNoteLabel.TextColor3 = Color3.new(1, 1, 1)
+    keyNoteLabel.Text = "Key Note: key link in https://discord.gg/B6a3b4PYgs"
+    keyNoteLabel.Font = Enum.Font.SourceSans
+    keyNoteLabel.TextSize = 24
+    keyNoteLabel.TextWrapped = true
+    keyNoteLabel.TextYAlignment = Enum.TextYAlignment.Center
+    keyNoteLabel.Parent = frame
+
     local textBox = Instance.new("TextBox")
     textBox.Size = UDim2.new(0.8, 0, 0.2, 0)
-    textBox.Position = UDim2.new(0.1, 0, 0.6, 0)
+    textBox.Position = UDim2.new(0.1, 0, 0.55, 0)
     textBox.BackgroundColor3 = Color3.new(1, 1, 1)
     textBox.TextColor3 = Color3.new(0, 0, 0)
     textBox.PlaceholderText = "Enter key here"
@@ -75,7 +93,6 @@ local function createInitialGUI()
             end
 
             local function showNotification(message)
-                local player = Players.LocalPlayer
                 local screenGui = Instance.new("ScreenGui")
                 screenGui.Name = "NotificationScreenGui"
                 screenGui.Parent = player:WaitForChild("PlayerGui")
@@ -100,7 +117,8 @@ local function createInitialGUI()
             local message = "Game; " .. gameName
             showNotification(message)
 
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/Nadir3709/RandomScript/main/FunkyFridayMobile"))()
+            -- Placeholder for additional script
+            print("Main script executed.")
         else
             textBox.Text = ""
             textBox.PlaceholderText = "Invalid key, try again."
@@ -108,5 +126,6 @@ local function createInitialGUI()
     end)
 end
 
--- Create the initial GUI
+-- Check the game ID and create the initial GUI
+checkGame()
 createInitialGUI()
