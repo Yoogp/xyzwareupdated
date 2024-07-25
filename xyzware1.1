@@ -1,0 +1,112 @@
+local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+-- Constants
+local CORRECT_KEY = "5ffZBf6mmLcTxP0ZLi38FAmUV4KpxKGb"
+
+-- Function to create the initial GUI
+local function createInitialGUI()
+    local player = Players.LocalPlayer
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "InitialScreenGui"
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0.5, 0, 0.3, 0)
+    frame.Position = UDim2.new(0.25, 0, 0.35, 0)
+    frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    frame.Parent = screenGui
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, 0, 0.2, 0)
+    titleLabel.Position = UDim2.new(0, 0, 0, 0)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.TextColor3 = Color3.new(1, 1, 1)
+    titleLabel.Text = "xyz.ware reworked | Funky Friday Mobile"
+    titleLabel.Font = Enum.Font.SourceSansBold
+    titleLabel.TextSize = 32
+    titleLabel.Parent = frame
+
+    local textBox = Instance.new("TextBox")
+    textBox.Size = UDim2.new(0.8, 0, 0.2, 0)
+    textBox.Position = UDim2.new(0.1, 0, 0.6, 0)
+    textBox.BackgroundColor3 = Color3.new(1, 1, 1)
+    textBox.TextColor3 = Color3.new(0, 0, 0)
+    textBox.PlaceholderText = "Enter key here"
+    textBox.Font = Enum.Font.SourceSans
+    textBox.TextSize = 24
+    textBox.Parent = frame
+
+    -- Handle the key entry
+    textBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed and textBox.Text == CORRECT_KEY then
+            -- Show correct key notification
+            local notification = Instance.new("ScreenGui")
+            notification.Name = "NotificationScreenGui"
+            notification.Parent = player:WaitForChild("PlayerGui")
+
+            local notificationLabel = Instance.new("TextLabel")
+            notificationLabel.Size = UDim2.new(0.5, 0, 0.1, 0)
+            notificationLabel.Position = UDim2.new(0.25, 0, 0.1, 0)
+            notificationLabel.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+            notificationLabel.TextColor3 = Color3.new(1, 1, 1)
+            notificationLabel.Text = "Correct key!"
+            notificationLabel.Font = Enum.Font.SourceSansBold
+            notificationLabel.TextSize = 24
+            notificationLabel.Parent = notification
+
+            -- Remove the notification and initial GUI after 4 seconds
+            wait(4)
+            screenGui:Destroy()
+            notification:Destroy()
+
+            -- Proceed with the next script
+            local function getGameName()
+                local placeId = game.PlaceId
+                local success, gameInfo = pcall(function()
+                    return MarketplaceService:GetProductInfo(placeId)
+                end)
+
+                if success and gameInfo and gameInfo.Name then
+                    return gameInfo.Name
+                else
+                    return "Unknown Game"
+                end
+            end
+
+            local function showNotification(message)
+                local player = Players.LocalPlayer
+                local screenGui = Instance.new("ScreenGui")
+                screenGui.Name = "NotificationScreenGui"
+                screenGui.Parent = player:WaitForChild("PlayerGui")
+
+                local notification = Instance.new("TextLabel")
+                notification.Size = UDim2.new(0.5, 0, 0.1, 0)
+                notification.Position = UDim2.new(0.25, 0, 0.1, 0)
+                notification.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+                notification.TextColor3 = Color3.new(1, 1, 1)
+                notification.Text = message
+                notification.Font = Enum.Font.SourceSansBold
+                notification.TextSize = 24
+                notification.Parent = screenGui
+
+                -- Automatically remove the notification after 5 seconds
+                wait(5)
+                screenGui:Destroy()
+            end
+
+            -- Get the game name and show the notification
+            local gameName = getGameName()
+            local message = "Game; " .. gameName
+            showNotification(message)
+
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Nadir3709/RandomScript/main/FunkyFridayMobile"))()
+        else
+            textBox.Text = ""
+            textBox.PlaceholderText = "Invalid key, try again."
+        end
+    end)
+end
+
+-- Create the initial GUI
+createInitialGUI()
